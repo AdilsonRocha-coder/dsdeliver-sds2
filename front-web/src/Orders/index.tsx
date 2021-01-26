@@ -23,9 +23,9 @@ function Orders() {
     fetchProducts()
       .then((response) => setProducts(response.data))
       .catch(() => {
-        toast.warning('Erro ao listar produtos');
-      })
-},    []);
+        toast.warning("Erro ao listar produtos");
+      });
+  }, []);
 
   const handleSelectProduct = (product: Product) => {
     const isAlreadySelected = checkIsSelected(selectedProducts, product);
@@ -42,19 +42,28 @@ function Orders() {
 
   const handleSubmit = () => {
     const productsIds = selectedProducts.map(({ id }) => ({ id }));
-    const payload = {
-      ...orderLocation!,
-      products: productsIds,
-    };
 
-    saveOrder(payload)
-      .then((response) => {
-        toast.error(`Pedido enviado com sucesso! Nº ${response.data.id}`);
-        setSelectedProducts([]);
-      })
-      .catch(() => {
-        toast.warning("Erro ao enviar pedido");
-      });
+    if (productsIds.length <= 0) {
+      toast.warning("Selecionar ao menos um pedido.");
+    } else {
+      if (orderLocation === undefined) {
+        toast.warning("Informar o endereço de entrega do pedido.");
+      } else {
+        const payload = {
+          ...orderLocation!,
+          products: productsIds,
+        };
+
+        saveOrder(payload)
+          .then((response) => {
+            toast.error(`Pedido enviado com sucesso! Nº ${response.data.id}`);
+            setSelectedProducts([]);
+          })
+          .catch(() => {
+            toast.warning("Erro ao enviar pedido");
+          });
+      }
+    }
   };
 
   return (

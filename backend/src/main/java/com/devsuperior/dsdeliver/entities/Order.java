@@ -105,6 +105,16 @@ public class Order implements Serializable {
 	public void setStatus(OrderStatus status) {
 		this.status = status;
 	}
+	
+	public Double getTotal() {   //aqui a JPA busca os produtos no banco de dados e faz a soma
+		double sum = 0.0;
+		for(Product p : products) {
+			sum += p.getPrice();
+		}
+		
+		return sum;
+		
+	}
 
 	public Set<Product> getProducts() {
 		return products;
